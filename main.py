@@ -9,6 +9,12 @@ engine = pyttsx3.init()       #initializing the text to speech engine
 def speak(text):
     engine.say(text)
     engine.runAndWait() 
+ 
+def search_web(query):
+    """Open web browser with search query for real-time information"""
+    search_url = f"https://www.google.com/search?q={query}"
+    webbrowser.open(search_url)
+    return f"I've opened a web search for {query}"    
     
 def processCommand(command):
     print(f"Processing command: {command}")
@@ -27,8 +33,21 @@ def processCommand(command):
         link=musicLibrary.music[song] 
         webbrowser.open(link)
         speak(f"Playing {song}")   
+        # Web search for real-time information
+    elif "search" in command or "search for" in command or "khoj" in command:
+        query = command.replace("search", "").replace("search for", "").replace("khoj", "").strip()
+        if query:
+            speak(f"Searching for {query}")
+            search_web(query)
+        else:
+            speak("What would you like me to search for?")   
+       # Exit commands
+    elif any(word in command for word in ["exit", "quit", "goodbye", "bye", "band karo", "बंद करो", "stop", "निघून जा"]):
+        speak("Goodbye! It was nice talking to you. Have a great day!")
+        return False         
     else:
-        # Let OpenAi Handle request    
+        # Let OpenAi Handle request  
+        pass  
 
 if __name__ == "__main__":
     speak("Hello Onkar, how can I assist you today?")
